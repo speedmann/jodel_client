@@ -4,6 +4,7 @@ import jodel_api
 import datetime
 from signal_handler import SignalHandler
 from post_overview import Post_overview
+from post_detail import Post_detail
 from downloader import Downloader
 import signal
 import queue
@@ -16,6 +17,7 @@ class Jodel():
         self.stopper = None
         self.threads = None
         self.q = queue.Queue()
+        self.post_q = queue.Queue()
 
     def start(self):
         self.stopper = threading.Event()
@@ -23,7 +25,10 @@ class Jodel():
         handler = SignalHandler(self.stopper, self.threads)
 
         downloader = Downloader(1, 'main', self.stopper, self.q)
-        thread = Post_overview(1, 'main', self.stopper, self.q)
+        thread = Post_overview(1, 'main', self.stopper, self.q, self.post_q)
+        for i in range(1,10):
+            post_detail = Post_detail(i, 'main', self.stopper, self.q, self.post_q)
+            self.threads.append(post_detail)
         self.threads.append(thread)
         self.threads.append(downloader)
 

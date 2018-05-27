@@ -9,12 +9,13 @@ import datetime
 
 
 class Post_overview(threading.Thread):
-    def __init__(self, threadID, name, stopper, q):
+    def __init__(self, threadID, name, stopper, q, post_q):
         threading.Thread.__init__(self)
         self.threadID = threadID
         self.name = name
         self.stopper = stopper
         self.q = q
+        self.post_q = post_q
         self.db = JodelDB()
 
     def run(self):
@@ -33,7 +34,7 @@ class Post_overview(threading.Thread):
                         if post['image'] is not '':
                             self.q.put({'url': post['image'],
                                         'id': post['id'], 'gender' : post['author']['gender_id']})
-                            print('add url {}'.format(post['image']))
+                            self.post_q.put({'id': post['id'], 'sleep_time' : 10 })
             except KeyError:
                 print(posts)
                 #print('{} sleeping for {} seconds'.format(self.channel, sleep_time))
