@@ -19,7 +19,7 @@ def api_get_comment(id):
 
 def api_create_post(id, text, gender, image):
     headers = {'Content-type': 'application/json', 'Accept': 'text/plain'}
-    data = {"id":id,"text":text, "gender":gender , "image": "/images/{}/{}'.format(gender, image.split('/')[-1])}
+    data = {"id":id,"text":text, "gender":gender , "image": "/images/{}/{}".format(gender, image.split('/')[-1])}
     url = 'http://jodel1.tuxcall.de:5000/api/posts'
     r = requests.post(url, data=json.dumps(data) , headers=headers)
 
