@@ -4,6 +4,7 @@ from db import Posts
 from db import JodelDB
 import requests
 import json
+from api import api_get_post, api_create_post
 
 import datetime
 
@@ -25,16 +26,16 @@ class Post_overview(threading.Thread):
             posts = self.get_posts()
             try:
                 for post in posts['results']['jodels']:
-                    if self.db.session.query(Posts).filter(Posts.post_id == post['id']).all() != []:
+                    if api_get_post(post['id']):
                         pass
                     else:
-                        post_sql = Posts(post_id=post['id'], message=post['text'])
-                        self.db.session.add(post_sql)
-                        self.db.session.commit()
+                        data = {"id":post['id'],"text":post['text']}
+                        api_create_post(post['id'], post['text'], post['author']['gender_id'])
+     
                         if post['image'] is not '':
                             self.q.put({'url': post['image'],
                                         'id': post['id'], 'gender' : post['author']['gender_id']})
-                            self.post_q.put({'id': post['id'], 'sleep_time' : 10 })
+                        self.post_q.put({'id': post['id'], 'sleep_time' : 10 })
             except KeyError:
                 print(posts)
                 #print('{} sleeping for {} seconds'.format(self.channel, sleep_time))

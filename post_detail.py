@@ -6,6 +6,7 @@ import requests
 import json
 
 import datetime
+from api import api_create_comment
 
 
 class Post_detail(threading.Thread):
@@ -26,17 +27,18 @@ class Post_detail(threading.Thread):
             if item is None:
                 time.sleep(1)
             else:
-                post = self.get_post(item['id'])
                 try:
+                    post = self.get_post(item['id'])
                     for comment in post['results']['comments']:
+                        api_create_comment(item['id'], comment['id'], comment['text'], comment['author']['gender_id'])
                         if comment['image'] is not '':
                             self.q.put({'url': comment['image'],
                                         'id': '{}_{}'.format(item['id'], comment['id']), 'gender' : comment['author']['gender_id']})
                     self.post_q.task_done()
                     print('sleep for {} {}'.format(item['id'], item['sleep_time']))
                     time.sleep(item['sleep_time'])
-                    if item['sleep_time'] < 300:
-                        self.post_q.put({'id':item['id'], 'sleep_time':item['sleep_time']+1})
+                    if item['sleep_time'] < 150:
+                        self.post_q.put({'id':item['id'], 'sleep_time':item['sleep_time']+10})
                 except TypeError:
                     print('{} failed'.format(item))
 

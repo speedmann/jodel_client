@@ -7,7 +7,7 @@ from post_overview import Post_overview
 from post_detail import Post_detail
 from downloader import Downloader
 import signal
-import queue
+from pqueue import Queue
 from db import Posts
 
 
@@ -16,8 +16,8 @@ class Jodel():
         self.jodel = None
         self.stopper = None
         self.threads = None
-        self.q = queue.Queue()
-        self.post_q = queue.Queue()
+        self.q = Queue('queues/post_queue')
+        self.post_q = Queue('queues/comment_queue')
 
     def start(self):
         self.stopper = threading.Event()
@@ -26,7 +26,7 @@ class Jodel():
 
         downloader = Downloader(1, 'main', self.stopper, self.q)
         thread = Post_overview(1, 'main', self.stopper, self.q, self.post_q)
-        for i in range(1,10):
+        for i in range(1,40):
             post_detail = Post_detail(i, 'main', self.stopper, self.q, self.post_q)
             self.threads.append(post_detail)
         self.threads.append(thread)
