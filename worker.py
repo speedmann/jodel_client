@@ -10,9 +10,9 @@ from api import api_create_comment
 def download(url, post_id, gender):
     url = url
     name = url.split('/')[-1]
-    if not os.path.isfile('/var/www/html/images/{}/{}.jpg'.format(gender, post_id)):
+    if not os.path.isfile('/var/www/html/images/{}/{}.jpg'.format(gender, name)):
         img_data = requests.get(url).content
-        with open('images/{}/{}'.format(gender, name), 'wb') as handler:
+        with open('//var/www/html/images/{}/{}'.format(gender, name), 'wb') as handler:
             handler.write(img_data)
         return True
     return False
