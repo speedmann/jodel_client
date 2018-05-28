@@ -28,7 +28,8 @@ def monitor_post(id, next_check, last_sleep):
             api_create_comment(id, comment['id'], comment['text'], comment['author']['gender_id'])
             if comment['image'] is not '':
                 q.enqueue(download, comment['image'], comment['id'], comment['author']['gender_id'])
-        post_q.enqueue(monitor_post, id, time.time()+last_sleep+10, last_sleep+10)
+        if last_sleep < 300:
+            post_q.enqueue(monitor_post, id, time.time()+last_sleep+10, last_sleep+10)
     else:
         post_q.enqueue(monitor_post, id, next_check, last_sleep)
 
