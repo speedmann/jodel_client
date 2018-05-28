@@ -28,6 +28,6 @@ def api_create_comment(post_id, comment_id, text, gender, image):
     comment = api_get_comment(comment_id)
     if posts and not comment:
         headers = {'Content-type': 'application/json', 'Accept': 'text/plain'}
-        data = {"id":comment_id, "text":text, "post_id":post_id, "gender":gender, "image": "/images/{}/{}'.format(gender, image.split('/')[-1])}
+        data = {"id":comment_id, "text":text, "post_id":post_id, "gender":gender, "image": "/images/{}/{}".format(gender, image.split('/')[-1])}
         url = 'http://jodel1.tuxcall.de:5000/api/comments'
         r = requests.post(url, data=json.dumps(data),headers=headers)
