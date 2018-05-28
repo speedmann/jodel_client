@@ -7,7 +7,7 @@ import json
 from api import api_get_post, api_create_post
 
 import datetime
-
+from worker import download, monitor_post
 
 class Post_overview(threading.Thread):
     def __init__(self, threadID, name, stopper, q, post_q):
@@ -33,9 +33,9 @@ class Post_overview(threading.Thread):
                         api_create_post(post['id'], post['text'], post['author']['gender_id'])
      
                         if post['image'] is not '':
-                            self.q.put({'url': post['image'],
-                                        'id': post['id'], 'gender' : post['author']['gender_id']})
-                        self.post_q.put({'id': post['id'], 'sleep_time' : 10 })
+                            self.q.enqueue(download, post['image'], post['id'], post['author']['gender_id'])
+                        #self.post_q.put({'id': post['id'], 'sleep_time' : 10 })
+                        self.post_q.enqueue(monitor_post, post['id'], time.time()+10, 10)
             except KeyError:
                 print(posts)
                 #print('{} sleeping for {} seconds'.format(self.channel, sleep_time))
