@@ -1,6 +1,5 @@
 import threading
 import time
-import jodel_api
 import datetime
 from signal_handler import SignalHandler
 from post_overview import Post_overview
