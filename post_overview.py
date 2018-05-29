@@ -30,7 +30,7 @@ class Post_overview(threading.Thread):
                         pass
                     else:
                         data = {"id":post['id'],"text":post['text']}
-                        api_create_post(post['id'], post['text'], post['author']['gender_id'], post['image'])
+                        api_create_post(post['id'], post['text'], post['author']['gender_id'], post['image'], post['timestamp'])
      
                         if post['image'] is not '':
                             self.q.enqueue(download, post['image'], post['id'], post['author']['gender_id'])

@@ -25,7 +25,7 @@ def monitor_post(id, next_check, last_sleep):
     if next_check < time.time():
         post = get_post(id)
         for comment in post['results']['comments']:
-            api_create_comment(id, comment['id'], comment['text'], comment['author']['gender_id'], comment['image'])
+            api_create_comment(id, comment['id'], comment['text'], comment['author']['gender_id'], comment['image'], comment['timestamp'])
             if comment['image'] is not '':
                 q.enqueue(download, comment['image'], comment['id'], comment['author']['gender_id'])
         if last_sleep < 300:
