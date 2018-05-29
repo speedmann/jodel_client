@@ -42,4 +42,3 @@ def api_create_comment(post_id, comment_id, text, gender, image, timestamp):
         r = requests.post(url, data=json.dumps(data),headers=headers)
 
 
-api_create_post(123, 'test',1,'','1527594085')
